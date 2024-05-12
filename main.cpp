@@ -6,14 +6,8 @@ using namespace std;
 // enums
 enum class Color {
     RESET = 0,
-    BLACK = 30,
     RED = 31,
-    GREEN = 32,
-    YELLOW = 33,
-    BLUE = 34,
-    MAGENTA = 35,
-    CYAN = 36,
-    WHITE = 37
+    YELLOW = 33
 };
 
 const int RMAX = 6;
@@ -167,21 +161,35 @@ void printBoard(int board[RMAX][CMAX]) {
   cout << "\n\n";
 }
 bool isWin(int board[RMAX][CMAX]) {
+  // horizontal and vertical
   for (int i = 0; i < RMAX; i++) {
     for (int j = 0; j < CMAX; j++) {
-      // check number horizontal red
+      // check number horizontal
       if (board[i][j]==1&&board[i][j+1]==1&&board[i][j+2]==1&&board[i][j+3]==1) return false;
       if (board[i][j]==2&&board[i][j+1]==2&&board[i][j+2]==2&&board[i][j+3]==2) return false;
 
       // check vertical
       if (board[i][j]==1&&board[i+1][j]==1&&board[i+2][j]==1&&board[i+3][j]==1) return false;
       if (board[i][j]==2&&board[i+1][j]==2&&board[i+2][j]==2&&board[i+3][j]==2) return false;
+    }
+  }
 
-      // check diagonal
+  // ascending diagonal
+  for (int i = 3; i < RMAX; i++) {
+    for (int j = 0; j < CMAX-3; j++) {
+      if (board[i][j]==1&&board[i-1][j+1]==1&&board[i-2][j+2]==1&&board[i-3][j+3]==1) return false;
+      if (board[i][j]==2&&board[i-1][j+1]==2&&board[i-2][j+2]==2&&board[i-3][j+3]==2) return false;   
+    }
+  }
+
+  // descending diagonal
+  for (int i = 0; i < RMAX-3; i++) {
+    for (int j = 0; j < CMAX-3; j++) {
       if (board[i][j]==1&&board[i+1][j+1]==1&&board[i+2][j+2]==1&&board[i+3][j+3]==1) return false;
       if (board[i][j]==2&&board[i+1][j+1]==2&&board[i+2][j+2]==2&&board[i+3][j+3]==2) return false;
     }
   }
+  
   return true;
 }
 void playGame(int board[RMAX][CMAX], int col, int team) {
@@ -191,7 +199,6 @@ void playGame(int board[RMAX][CMAX], int col, int team) {
   // Start the chip dropping from the top of the column
   dropChip(0, board, col, team);
 }
-// Recursively simulate the board falling
 void dropChip(int row, int board[RMAX][CMAX], int col, int team) {
   if (row == RMAX) // Base case
     return;
